@@ -1,0 +1,3 @@
+[submodule "rhhlgp-rai"]
+	path = rhhlgp-rai
+	url = git@github.com:cornelius-braun/rhhlgp-rai.git
