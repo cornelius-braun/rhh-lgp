@@ -2,7 +2,7 @@
 // Created by Cornelius Braun on 21.07.21.
 //
 
-#include "RHLGP.h"
+#include "RHHLGP.h"
 
 #define DEBUG(x) //x
 #define DEL_INFEASIBLE(x) //x
@@ -42,7 +42,7 @@ void getEndConfig(rai::Configuration &C, shared_ptr<KOMO> komo) {
 
 //===========================================================================
 // increment costs and collisions
-void RHLGP_solver::getStats(BoundType bound, shared_ptr<KOMO> komo) {
+void RHHLGP_solver::getStats(BoundType bound, shared_ptr<KOMO> komo) {
 	Graph result = komo->getReport((komo->verbose>0 && bound>=2));
 	DEBUG(FILE("z.problem.cost") <<result;);
 	double cost_here = result.get<double>("sos");
@@ -408,7 +408,7 @@ rai::String LGP_Node::getTreePathString(int from, uint to, char sep) const {
 
 //===========================================================================
 // this sets up a new LGP tree, based on a previous one
-void RHLGP_solver::setupLGP(LGP_Tree &tree, const char *priorDecisions) const {
+void RHHLGP_solver::setupLGP(LGP_Tree &tree, const char *priorDecisions) const {
 	tree.fol.addTerminalRule(goals);
 	tree.heuristicCosts = interfaceFct;
 	tree.verbose = verbose;
@@ -430,12 +430,12 @@ BoundType getOptimizedBound(LGP_Node *n) {
 
 //===========================================================================
 // gets the node at end of horizon
-LGP_Node* RHLGP_solver::horizonNode(LGP_Tree &lgp, int i) {
+LGP_Node* RHHLGP_solver::horizonNode(LGP_Tree &lgp, int i) {
 	return lgp.fringe_solved.last()->getTreePath().elem(std::min((uint) i*horizon, lgp.fringe_solved.last()->getTreePath().N)-1);
 }
 
 //===========================================================================
-void RHLGP_solver::reset() {
+void RHHLGP_solver::reset() {
 	totalExpansions = 0;
 	solutionLen = 0;
 	komo = make_shared<KOMO>();
@@ -446,7 +446,7 @@ void RHLGP_solver::reset() {
 // 1. run LGP -- if sequence is solution, optimize in slices as long as it is feasible
 // 2. return the endconfig of the last feasible step
 // 3. run next lgp instance with new config and same goals
-void RHLGP_solver::optimize(ptr<OpenGL> gl) {
+void RHHLGP_solver::optimize(ptr<OpenGL> gl) {
 	rai::String solution;
 	bool solved = false;
 	LGP_Node *optimizedNode;

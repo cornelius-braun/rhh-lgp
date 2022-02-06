@@ -7,11 +7,11 @@
 #include "KOMO/komo.h"
 #include "Kin/kin.h"
 
-#ifndef MANIPULATIONPLANNING_RHLGP_H
-#define MANIPULATIONPLANNING_RHLGP_H
+#ifndef MANIPULATIONPLANNING_RHHLGP_H
+#define MANIPULATIONPLANNING_RHHLGP_H
 
-struct RHLGP_solver{
-		RHLGP_solver(rai::Configuration &C, uint horizon, std::function<void(LGP_Node *n)> interfaceFct, const char* goals, 	const char * folFileName, int verbose):
+struct RHHLGP_solver{
+		RHHLGP_solver(rai::Configuration &C, uint horizon, std::function<void(LGP_Node *n)> interfaceFct, const char* goals, 	const char * folFileName, int verbose):
 		C(C), horizon(horizon), verbose(verbose), goals(goals), folFile(folFileName),
 		interfaceFct(interfaceFct), totalExpansions(0), solutionLen(0), komo(make_shared<KOMO>()) {};
 
@@ -35,4 +35,4 @@ struct RHLGP_solver{
 void getEndConfig(rai::Configuration &C, shared_ptr<KOMO> komo);
 
 
-#endif //MANIPULATIONPLANNING_RHLGP_H
+#endif //MANIPULATIONPLANNING_RHHLGP_H

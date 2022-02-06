@@ -1,5 +1,5 @@
 #include "src/costToGo.h"
-#include "src/RHLGP.h"
+#include "src/RHHLGP.h"
 #include "src/help.h"
 #include <LGP/LGP_tree.h>
 #include <Kin/kin.h>
@@ -58,7 +58,7 @@ void solveComplexTask(uint numObj, bool h = true, int verbose = 1, bool player =
 }
 
 //===========================================================================
-void RHLGP(int numObj, uint horizon, ManipulationTask task) {
+void RHHLGP(int numObj, uint horizon, ManipulationTask task) {
 	switch (task) {
 		case MT_climb: {
 			rai::Configuration C;
@@ -66,8 +66,8 @@ void RHLGP(int numObj, uint horizon, ManipulationTask task) {
 			ptr<OpenGL> gl = setupCamera();
 
 			void (*heuristic)(LGP_Node *n) = [](LGP_Node *n){ costToGo1And2(n,"banana",{"L_handA","R_handB"},1); };
-			RHLGP_solver rhlgp(C, horizon, heuristic, "(held banana)", "fol/fol.g", 2);
-			rhlgp.optimize(gl);
+			RHHLGP_solver rhhlgp(C, horizon, heuristic, "(held banana)", "fol/fol.g", 2);
+			rhhlgp.optimize(gl);
 		} break;
 
 		case MT_climb_single: {
@@ -76,8 +76,8 @@ void RHLGP(int numObj, uint horizon, ManipulationTask task) {
 			ptr<OpenGL> gl = setupCamera();
 
 			void (*heuristic)(LGP_Node *n) = [](LGP_Node *n){ costToGo1And2(n,"banana",{"L_handA"},1); };
-			RHLGP_solver rhlgp(C, horizon, heuristic, "(held banana)", "fol/fol.g", 2);
-			rhlgp.optimize(gl);
+			RHHLGP_solver rhhlgp(C, horizon, heuristic, "(held banana)", "fol/fol.g", 2);
+			rhhlgp.optimize(gl);
 		} break;
 
 		case MT_complex: {
@@ -90,8 +90,8 @@ void RHLGP(int numObj, uint horizon, ManipulationTask task) {
 			ptr<OpenGL> gl = setupCamera();
 
 			void (*heuristic)(LGP_Node *n) = [](LGP_Node *n){ costToGo3(n, {"banana", "green_banana"}, STRING("L_handA").p); };
-			RHLGP_solver rhlgp(C, horizon, heuristic, "(held banana) (held green_banana)", "fol/fol.g", 2);
-			rhlgp.optimize(gl);
+			RHHLGP_solver rhhlgp(C, horizon, heuristic, "(held banana) (held green_banana)", "fol/fol.g", 2);
+			rhhlgp.optimize(gl);
 		} break;
 
 		case MT_mobileManipulator: {
@@ -103,8 +103,8 @@ void RHLGP(int numObj, uint horizon, ManipulationTask task) {
 			for (int i = 0; i < numObj; ++i) {terminal << "(on shelf2 obj" <<i << ") ";}
 
 			void (*heuristic)(LGP_Node *n) = [](LGP_Node *n){ costToGo4(n, 4, "shelf1", "shelf2"); };
-			RHLGP_solver rhlgp(C, horizon, heuristic, terminal, "fol/fol.g", 2);
-			rhlgp.optimize(gl);
+			RHHLGP_solver rhhlgp(C, horizon, heuristic, terminal, "fol/fol.g", 2);
+			rhhlgp.optimize(gl);
 		} break;
 
 		case MT_obstacle: {
@@ -115,8 +115,8 @@ void RHLGP(int numObj, uint horizon, ManipulationTask task) {
 			rai::String terminal = "(held banana)";
 
 			auto heuristic = [](LGP_Node *n){ return costToGo5(n, "base0", "banana"); };
-			RHLGP_solver rhlgp(C, horizon, heuristic, terminal, "fol/fol.g", 2);
-			rhlgp.optimize(gl);
+			RHHLGP_solver rhhlgp(C, horizon, heuristic, terminal, "fol/fol.g", 2);
+			rhhlgp.optimize(gl);
 		} break;
 	}
 }
@@ -157,15 +157,15 @@ int main(int argc,char** argv){
 	// this is the mobile manipulator scenario -- FOURTH EXPERIMENT in paper uses this scenario with different configurations
 	//solveMobileManipulator(8, true, 2, false);
 
-	// +1 experiment for ICRA -- FIFTH EXPERIMENT in paper uses this scenario with different configurations
+	// FIFTH EXPERIMENT in paper uses this scenario with different configurations
 	//solveObstacleTask(2, true, 2, false);
 
 	// a receding horizon formulation that plans the first scenario from above iteratively with a horizon -- LAST EXPERIMENT
-	//RHLGP(25, 10, MT_complex);
-	//RHLGP(16, 6, MT_mobileManipulator);
-	//RHLGP(45, 6, MT_climb_single);
-	//RHLGP(32, 3, MT_climb);
-	//RHLGP(4, 6, MT_obstacle);
+	//RHHLGP(25, 10, MT_complex);
+	//RHHLGP(8, 6, MT_mobileManipulator);
+	//RHHLGP(45, 6, MT_climb_single);
+	//RHHLGP(32, 3, MT_climb);
+	//RHHLGP(4, 6, MT_obstacle);
 
   return 0;
 }
