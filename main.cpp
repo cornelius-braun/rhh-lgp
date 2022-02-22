@@ -3,6 +3,7 @@
 #include "src/help.h"
 #include <LGP/LGP_tree.h>
 #include <Kin/kin.h>
+#include "src/objectHandling.h"
 
 //===========================================================================
 void solveClimbingTask(uint numObj, HeuristicFct h, int verbose=1, bool player=false, int numCrawlers=2){
@@ -166,6 +167,9 @@ int main(int argc,char** argv){
 	//RHHLGP(45, 6, MT_climb_single);
 	//RHHLGP(32, 3, MT_climb);
 	//RHHLGP(4, 6, MT_obstacle);
+
+	objectHandling();
+
 
   return 0;
 }
