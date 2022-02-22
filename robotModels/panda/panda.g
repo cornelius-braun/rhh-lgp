@@ -1,6 +1,6 @@
 Include='panda_clean.g'
 
-Include 'panda_simplerCollisionModels.g'
+Include 'panda_withoutCollisionModels.g'
 
 ## zero position
 

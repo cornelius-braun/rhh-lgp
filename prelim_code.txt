@@ -1,0 +1,145 @@
+//
+// Created by cornelius on 22.02.22.
+//
+#include <LGP/LGP_tree.h>
+#include <Kin/kin.h>
+#include "objectHandling.h"
+#include "src/help.h"
+
+rai::String decSeq = "(grasp endeffR obj0) (place endeffR obj0 table2) (grasp endeffL obj0)";
+
+void createTableScene(rai::Configuration& C, uint numObj) {
+	for(;;){
+		C.clear();
+		C.addFile("robotModels/pandaStation.g");
+		//C.addFile("scenarios/tableScene.g");
+		C.optimizeTree();
+		for(uint i=0; i<numObj; i++){
+			rai::Frame *f = C.addFrame(STRING("obj"<<i), "table1", "type:ssBox size:[.08, .08, .15, .02], contact:1, collisions:-1, color:[1.,0.,0.], logical={ object:True, grippable }, joint=rigid" );
+			f->setRelativePosition({(rnd.uni(-.2, .2)), rnd.uni(-.2,.2), .1});
+		}
+		C.stepSwift();
+		arr g, J;
+		C.kinematicsPenetration(g, J);
+		if(g.scalar()==0.) break;
+	}
+	C.proxies.clear();
+}
+
+void objectHandling() {
+	rai::Configuration C;
+	/*C.clear();
+	C.addFile("robotModels/pandaStation.g");
+	C.addFile("scenarios/tableScene.g");
+	C.optimizeTree();*/
+	int numObj = 3;
+	createTableScene(C, numObj);
+
+	ptr<OpenGL> gl = setupCamera();
+
+	/*rai::String terminal;
+	for (int i = 0; i < numObj; ++i) {terminal << "(on goal obj" <<i << ") ";}*/
+
+	LGP_Tree lgp(C, "fol/fol.g");
+	LGP_Node *node = lgp.walkToNode(decSeq);
+
+	/*BoundType bound = BD_seq;
+	node->optBound(bound, true, 1);
+	node->displayBound(gl, bound);*/
+
+	BoundType bound = BD_path;
+	node->optBound(bound, true, 1);
+	node->displayBound(gl, bound);
+}
+
+//--------------------------------
+
+frame world { shape:ssBox, size:[8 8 0.2 0.001], contact:0,
+                       X:<t(0. 0. 0.0) d(0 1 0 0)>,
+                       logical:{ object, base }  }
+
+#box
+frame box{ X:<t(0 0 .74)> }
+
+# TODO: maybe put table legs back in
+
+#base
+frame base (box){ Q:<t(0 -.23 .10)> }
+frame (base){ Q:<t(.01 .0  -.04) > shape:ssBox size:[6.12 .08 .08 .01] color:[.6 .6 .6] }
+frame (base){ Q:<t(.0 -.12 -.04) > shape:ssBox size:[6.12 .08 .08 .01] color:[.6 .6 .6] }
+
+
+#table
+frame table1(world){ Q:<t(1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2] contact logical:{tableS}}
+frame table2(world){ Q:<t(.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2] contact logical:{tableS}}
+frame table3(world){ Q:<t(-.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2] contact logical:{tableS}}
+frame goal(world){ Q:<t(-1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[0. 1. 0.] contact logical:{goal}}
+
+
+Prefix = "L_"
+Include='panda/panda.g'
+
+Prefix = "R_"
+Include='panda/panda.g'
+
+Prefix = "T_"
+Include='panda/panda.g'
+
+Edit L_panda_link0 (base) { joint:rigid Q:<t(0. 0. 0.) d(90 0 0 1)> }
+Edit R_panda_link0 (base) { joint:rigid Q:<t( 1. 0 0) d(90 0 0 1)> }
+Edit T_panda_link0 (base) { joint:rigid Q:<t( -1. 0 0) d(90 0 0 1)> }
+
+Edit L_panda_joint2 { q= -.5 }
+Edit R_panda_joint2 { q= -.5 }
+Edit T_panda_joint2 { q= -.5 }
+
+Edit L_panda_leftfinger_1 { visual!, noVisual }
+Edit L_panda_rightfinger_1 { visual!, noVisual }
+Edit R_panda_leftfinger_1 { visual!, noVisual }
+Edit R_panda_rightfinger_1 { visual!, noVisual }
+Edit T_panda_leftfinger_1 { visual!, noVisual }
+Edit T_panda_rightfinger_1 { visual!, noVisual }
+
+frame endeffR (R_panda_hand_1) { Q:<t(0 0 .103) d(180 1 0 0) d(-90 0 0 1)> shape:marker size:[.02] color:[1 1 0] logical:{gripper}}
+frame endeffL (L_panda_hand_1) { Q:<t(0 0 .103) d(180 1 0 0) d(-90 0 0 1)> shape:marker size:[.02] color:[1 1 0] logical:{gripper}}
+frame endeffT (T_panda_hand_1) { Q:<t(0 0 .103) d(180 1 0 0) d(-90 0 0 1)> shape:marker size:[.02] color:[1 1 0] logical:{gripper}}
+
+frame endeffL_fingerL (L_panda_rightfinger_1) { Q:<t(0 0 0.0446) d(180 1 0 0) d(90 0 0 1)> shape:marker size:[.02] color:[0 0 1] }
+frame endeffL_fingerR (L_panda_leftfinger_1) { Q:<t(0 0 0.0446) d(180 1 0 0) d(90 0 0 1)> shape:marker size:[.02] color:[0 0 1] }
+
+frame endeffR_fingerL (R_panda_rightfinger_1) { Q:<t(0 0 0.0446) d(180 1 0 0) d(90 0 0 1)> shape:marker size:[.02] color:[0 0 1] }
+frame endeffR_fingerR (R_panda_leftfinger_1) { Q:<t(0 0 0.0446) d(180 1 0 0) d(90 0 0 1)> shape:marker size:[.02] color:[0 0 1] }
+
+frame endeffT_fingerL (T_panda_rightfinger_1) { Q:<t(0 0 0.0446) d(180 1 0 0) d(90 0 0 1)> shape:marker size:[.02] color:[0 0 1] }
+frame endeffT_fingerR (T_panda_leftfinger_1) { Q:<t(0 0 0.0446) d(180 1 0 0) d(90 0 0 1)> shape:marker size:[.02] color:[0 0 1] }
+
+
+//--------------------------------
+// mobile manip
+
+base 	{  shape:ssBox, size:[8 8 0.2 0.001], contact:1,
+         X:<t(0. 0. 0.0) d(0 1 0 0)>,
+         logical:{ object, base } }
+
+# this is the mobile base
+_plate (base) { X:<t (0 0 .25)> }
+_mobileBase (_plate){shape:ssBox color:[.5 .81 .88] size:[.3 .3 .3 .05] contact:1 joint:transXYPhi } # the contact makes the walker not sink in
+mobileBase (_mobileBase) {Q:<t(0. 0. .155)>, shape:ssBox, size:[.01, .01, .005, 0.0001], color:[0.,1.,0.], contact:1, logical:{object:True, mobile}} # this is a little marker style object in the middle so the connection is in the middle --> contact-1 because here collision is okay
+
+# graspable objects
+shelf1 (base) {shape:ssBox, Q:<t(1. -2. .3)>, size:[1. .7 .5 .01], color:[1., .75, .69], contact:1, logical:{object:True, tray}}
+shelf2 (base) {shape:ssBox, Q:<t(1.4 -.5 .3)>, size:[1. .7 .5 .01], color:[.79 .94 .76], contact:1, logical:{object:True, tray}} #.79 .94 .76
+
+# this is the walkers
+#Prefix: "L_"
+#Include: '../robotModels/walker.g'
+#Edit L_handA (base) { joint:rigid, Q:<t(-.3 1.2 .17) d(180 0 0 1)>, color:[.0 .2 .8], logical:{ gripper, support, busy, lWalker}}
+#Edit L_handA (mobileBase) { joint:rigid, Q:<t(0. 0. .06) d(180 0 0 1)>, color:[.0 .2 .8], logical:{ gripper, support, busy, lWalker, onMobile}}
+#Edit L_handB (L_arm2){ logical:{ gripper, lWalker}}
+
+Prefix: "R_"
+Include: '../robotModels/walker.g'
+Edit R_handA (base){ joint:rigid, Q:<t(-2.3 1.3 .17) d(0 0 0 1)>, color:[.8 .2 .0], logical:{ gripper, support, busy, rWalker}}
+Edit R_handB (R_arm2){ logical:{ gripper, rWalker}}
+Prefix!
+

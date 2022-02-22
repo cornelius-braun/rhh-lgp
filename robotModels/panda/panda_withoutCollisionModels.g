@@ -1,5 +1,3 @@
-Include='panda_clean.g'
-
 Delete panda_link0_0
 Delete panda_link1_0
 Delete panda_link2_0
