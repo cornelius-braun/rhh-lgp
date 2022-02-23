@@ -44,6 +44,7 @@ stable
 stableOn
 connectCrawlers
 touchBoxNormalX
+topBoxPlace
 
 ## constants (added by the code)
 
@@ -149,7 +150,7 @@ DecisionRule place {
   { (grasped X Y)! (busy X)! (busy Y)! (held Y)! (placed Y) (on Z Y)  # logic only
     komo(stable Y ANY)!     # NLP predicates
     komo(touch X Y)! komo(touch Y Z) komo(above Y Z)
-    komo(stable Z Y) komo(stable X Y)!
+    komo(stable Z Y) komo(stable X Y)! (topBoxPlace X Y Z)
     }
 }
 

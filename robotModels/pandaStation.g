@@ -17,7 +17,8 @@ frame (base){ Q:<t(.0 -.12 -.04) > shape:ssBox size:[6.12 .08 .08 .01] color:[.6
 frame table1(world) { Q:<t(1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2], contact:1, collision:1, logical:{tray}}
 frame table2(world) { Q:<t(.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2], contact:1, collision:1, logical:{tray}}
 frame table3(world) { Q:<t(-.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2], contact:1, collision:1, logical:{tray}}
-frame goal(world) { Q:<t(-1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[0. 1. 0.], contact:1, collision:1, logical:{tray, target}}
+frame table4(world) { Q:<t(-1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[0. 1. 0.], contact:1, collision:1}
+frame goal(table4) { Q:<t(0. 0. .02)> shape:ssBox size:[.2 .2 .001 .005] color:[0. 1. 0.], contact:1, collision:1, logical:{tray, target}}
 
 
 Prefix = "L_"
