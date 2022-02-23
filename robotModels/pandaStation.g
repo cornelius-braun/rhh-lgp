@@ -1,4 +1,4 @@
-frame world { shape:ssBox, size:[8 8 0.2 0.001], contact:0,
+frame world { shape:ssBox, size:[8 8 0.2 0.001], contact:1,
                        X:<t(0. 0. 0.0) d(0 1 0 0)>,
                        logical:{ object, base }  }
 
@@ -8,16 +8,16 @@ frame box{ X:<t(0 0 .74)> }
 # TODO: maybe put table legs back in
 
 #base
-frame base (box){ Q:<t(0 -.23 .10)> }
-frame (base){ Q:<t(.01 .0  -.04) > shape:ssBox size:[6.12 .08 .08 .01] color:[.6 .6 .6] }
-frame (base){ Q:<t(.0 -.12 -.04) > shape:ssBox size:[6.12 .08 .08 .01] color:[.6 .6 .6] }
+frame base (box){ Q:<t(0 -.23 .10)>, contact:1 }
+frame (base){ Q:<t(.01 .0  -.04) > shape:ssBox size:[6.12 .08 .08 .01] color:[.6 .6 .6], contact:1 }
+frame (base){ Q:<t(.0 -.12 -.04) > shape:ssBox size:[6.12 .08 .08 .01] color:[.6 .6 .6], contact:1 }
 
 
 #table
-frame table1(world){ Q:<t(1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2] contact logical:{tableS}}
-frame table2(world){ Q:<t(.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2] contact logical:{tableS}}
-frame table3(world){ Q:<t(-.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2] contact logical:{tableS}}
-frame goal(world){ Q:<t(-1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[0. 1. 0.] contact logical:{goal}}
+frame table1(world) { Q:<t(1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2], contact:1, collision:1, logical:{tray}}
+frame table2(world) { Q:<t(.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2], contact:1, collision:1, logical:{tray}}
+frame table3(world) { Q:<t(-.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[.4 .3 .2], contact:1, collision:1, logical:{tray}}
+frame goal(world) { Q:<t(-1.5 .25 .8)> shape:ssBox size:[.7 .7 .018 .005] color:[0. 1. 0.], contact:1, collision:1, logical:{tray, target}}
 
 
 Prefix = "L_"

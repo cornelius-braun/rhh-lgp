@@ -100,8 +100,9 @@ DecisionRule grasp {
     (object X) (gripper X)! (grippable X) (held X)! (touched A X)! #(placed X)! # oz: added 'base' frame as a logical 'base' in scene.g
     (INFEASIBLE grasp A X)! }
   { (busy A)
-    (held X) (grasped A X) (stable ANY X)! (on ANY X)!
-    (stable A X) komo(touch A X) (touched A X)
+    (held X) (grasped A X) (stable ANY X)! (touched A X) komo(above X ANY)!
+    komo(touch ANY X)! #(stableOn ANY X)!
+    komo(stable A X) komo(touch A X) #(stable ANY X)!
   }
 }
 
@@ -146,9 +147,9 @@ DecisionRule place {
   X, Y, Z
   { (gripper X) (grasped X Y) (tray Z) (held Y) (INFEASIBLE place X Y Z)! }
   { (grasped X Y)! (busy X)! (busy Y)! (held Y)! (placed Y) (on Z Y)  # logic only
-    (stable Y ANY)!     # NLP predicates
+    komo(stable Y ANY)!     # NLP predicates
     komo(touch X Y)! komo(touch Y Z) komo(above Y Z)
-    (stable Z Y) (stable X Y)!
+    komo(stable Z Y) komo(stable X Y)!
     }
 }
 

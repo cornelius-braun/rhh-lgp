@@ -12,7 +12,6 @@ void createTableScene(rai::Configuration& C, uint numObj) {
 	for(;;){
 		C.clear();
 		C.addFile("robotModels/pandaStation.g");
-		//C.addFile("scenarios/tableScene.g");
 		C.optimizeTree();
 		for(uint i=0; i<numObj; i++){
 			rai::Frame *f = C.addFrame(STRING("obj"<<i), "table1", "type:ssBox size:[.08, .08, .15, .02], contact:1, collisions:-1, color:[1.,0.,0.], logical={ object:True, grippable }, joint=rigid" );
@@ -22,18 +21,16 @@ void createTableScene(rai::Configuration& C, uint numObj) {
 		arr g, J;
 		C.kinematicsPenetration(g, J);
 		if(g.scalar()==0.) break;
+		break;
 	}
 	C.proxies.clear();
 }
 
 void objectHandling() {
 	rai::Configuration C;
-	/*C.clear();
-	C.addFile("robotModels/pandaStation.g");
-	C.addFile("scenarios/tableScene.g");
-	C.optimizeTree();*/
 	int numObj = 3;
 	createTableScene(C, numObj);
+	//createShelfScene(C, 1);
 
 	ptr<OpenGL> gl = setupCamera();
 
