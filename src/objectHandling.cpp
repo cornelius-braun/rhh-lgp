@@ -34,8 +34,8 @@ void objectHandling() {
 
 	ptr<OpenGL> gl = setupCamera();
 
-	/*rai::String terminal;
-	for (int i = 0; i < numObj; ++i) {terminal << "(on goal obj" <<i << ") ";}*/
+	rai::String terminal;
+	for (int i = 0; i < numObj; ++i) {terminal << "(on goal obj" <<i << ") ";}
 
 	LGP_Tree lgp(C, "fol/fol.g");
 	LGP_Node *node = lgp.walkToNode(decSeq);

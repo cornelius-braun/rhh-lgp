@@ -156,7 +156,7 @@ int main(int argc,char** argv){
 	//solveComplexTask(8, true, 2, false);
 
 	// this is the mobile manipulator scenario -- FOURTH EXPERIMENT in paper uses this scenario with different configurations
-	//solveMobileManipulator(4, true, 2, false);
+	solveMobileManipulator(4, true, 2, false);
 
 	// FIFTH EXPERIMENT in paper uses this scenario with different configurations
 	//solveObstacleTask(2, true, 2, false);

@@ -98,8 +98,8 @@ void costToGo4(LGP_Node* n, int numObjects, rai::String source, rai::String targ
 	// use decision heuristics that leverage geometric information
 	switch (str2int(decision->rule->key)) {
 		// we incentivize connect and connecting to the mobile base equally
-		case str2int("connect2mobile"): n->cost(BD_symbolic) -= .15; break;
-		case str2int("connect"): n->cost(BD_symbolic) += connectHeuristic(n, decision) - .15; break;
+		case str2int("connect2mobile"): n->cost(BD_symbolic) -= 0.; break;
+		case str2int("connect"): n->cost(BD_symbolic) += connectHeuristic(n, decision); break;
 
 			// only place on target
 		case str2int("place"): n->cost(BD_symbolic) += placeHeuristic(n, decision, target); break;
@@ -128,6 +128,29 @@ void costToGo5(LGP_Node* n, rai::String source, rai::String target) {
 	// use decision heuristics that leverage geometric information
 	switch (str2int(decision->rule->key)) {
 		case str2int("step"): n->cost(BD_symbolic) += stepHeuristic(n, decision, STRING(target).p, 1); break;
+
+		// check if connected to mobile base -- if yes, then we skip this heuristic because we can move freely
+		case str2int("grasp"): n->cost(BD_symbolic) += graspHeuristic(n, decision); break;
+	};
+}
+
+//===========================================================================
+void costToGo6(LGP_Node* n, int numObjects, rai::String source, rai::String target) {
+	double initDist = 4; //euclideanDistance(n->startKinematics.getFrame(source)->getPosition(), n->startKinematics.getFrame(target)->getPosition());
+	// only set initDist for first decision
+	if (n->step == 0) {
+		n->cost(BD_symbolic) = numObjects * initDist;
+		return;
+	}
+	// now we are not at root
+	n->cost(BD_symbolic) = n->parent->cost(BD_symbolic);  // base computations on parent costs
+	const FOL_World::Decision* decision = std::dynamic_pointer_cast<const FOL_World::Decision>(n->decision).get();
+
+	// use decision heuristics that leverage geometric information
+	switch (str2int(decision->rule->key)) {
+		// we incentivize connect and connecting to the mobile base equally
+		// only place on target
+		case str2int("place"): n->cost(BD_symbolic) += placeHeuristic(n, decision, target); break;
 
 		// check if connected to mobile base -- if yes, then we skip this heuristic because we can move freely
 		case str2int("grasp"): n->cost(BD_symbolic) += graspHeuristic(n, decision); break;

@@ -8,8 +8,8 @@ _mobileBase (_plate){shape:ssBox color:[.5 .81 .88] size:[.3 .3 .3 .05] contact:
 mobileBase (_mobileBase) {Q:<t(0. 0. .155)>, shape:ssBox, size:[.01, .01, .005, 0.0001], color:[0.,1.,0.], contact:-1, logical:{object:True, mobile}} # this is a little marker style object in the middle so the connection is in the middle --> contact-1 because here collision is okay
 
 # graspable objects
-shelf1 (base) {shape:ssBox, Q:<t(1. -2. .75)>, size:[1. .7 .5 .01], color:[1., .75, .69], contact:1, logical:{object:True, tray}}
-shelf2 (base) {shape:ssBox, Q:<t(1.4 -.5 .75)>, size:[1. .7 .5 .01], color:[.79 .94 .76], contact:1, logical:{object:True, tray}} #.79 .94 .76
+shelf1 (base) {shape:ssBox, Q:<t(1. -2. .45)>, size:[1. .7 .5 .01], color:[1., .75, .69], contact:1, logical:{object:True, tray}}
+shelf2 (base) {shape:ssBox, Q:<t(1.4 -.5 .45)>, size:[1. .7 .5 .01], color:[.79 .94 .76], contact:1, logical:{object:True, tray}} #.79 .94 .76
 
 # this is the walkers
 #Prefix: "L_"

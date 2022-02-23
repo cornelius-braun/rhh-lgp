@@ -85,6 +85,11 @@ bool reachabilityCheck(LGP_Node *n, const FOL_World::Decision* decision, arr tar
 }
 
 //===========================================================================
+bool pandaReachability() {
+	// TODO
+}
+
+//===========================================================================
 double stepHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const char *target, int numberOfWalkers) {
 	arr targetPos = n->startKinematics.getFrame(decision->substitution.last()->key)->getPosition();
 	return euclideanDistance(getPosFromDecision(n, decision), targetPos) <= numberOfWalkers*CRAWLER_LEN ? getStepSize(n, decision, target) : 1000;
@@ -122,7 +127,8 @@ double connectHeuristic(LGP_Node *n, const FOL_World::Decision* decision) {
 }
 
 //===========================================================================
-double graspHeuristic(LGP_Node *n, const FOL_World::Decision* decision) {
+double graspHeuristic(LGP_Node *n, const FOL_World::Decision* decision, bool panda=false) {
 	arr targetPos = n->startKinematics.getFrame(decision->substitution.last()->key)->getPosition();
+	if (panda) { return pandaReachability(n, decision, targetPos) ? 0 : 1000; } // TODO: adapt
 	return reachabilityCheck(n, decision, targetPos) ? 0 : 1000;
 }
