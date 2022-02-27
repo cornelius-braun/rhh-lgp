@@ -8,7 +8,7 @@
 
 rai::String decSeq = "(grasp endeffR obj0) (place endeffR obj0 table2) (grasp endeffL obj0) (place endeffL obj0 table3) (grasp endeffT obj0) (place endeffT obj0 goal)";
 
-void createTableScene(rai::Configuration& C, uint numObj) {
+/*void createTableScene(rai::Configuration& C, uint numObj) {
 	for(;;){
 		C.clear();
 		C.addFile("robotModels/pandaStation.g");
@@ -24,7 +24,7 @@ void createTableScene(rai::Configuration& C, uint numObj) {
 		break;
 	}
 	C.proxies.clear();
-}
+}*/
 
 void objectHandling() {
 	rai::Configuration C;

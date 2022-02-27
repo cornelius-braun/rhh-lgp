@@ -98,8 +98,8 @@ void costToGo4(LGP_Node* n, int numObjects, rai::String source, rai::String targ
 	// use decision heuristics that leverage geometric information
 	switch (str2int(decision->rule->key)) {
 		// we incentivize connect and connecting to the mobile base equally
-		case str2int("connect2mobile"): n->cost(BD_symbolic) -= 0.; break;
-		case str2int("connect"): n->cost(BD_symbolic) += connectHeuristic(n, decision); break;
+		case str2int("connect2mobile"): n->cost(BD_symbolic) -= 0.15; break;
+		case str2int("connect"): n->cost(BD_symbolic) += connectHeuristic(n, decision) - .15; break;
 
 			// only place on target
 		case str2int("place"): n->cost(BD_symbolic) += placeHeuristic(n, decision, target); break;
@@ -135,8 +135,8 @@ void costToGo5(LGP_Node* n, rai::String source, rai::String target) {
 }
 
 //===========================================================================
-void costToGo6(LGP_Node* n, int numObjects, rai::String source, rai::String target) {
-	double initDist = 4; //euclideanDistance(n->startKinematics.getFrame(source)->getPosition(), n->startKinematics.getFrame(target)->getPosition());
+void costToGo6(LGP_Node* n, int numObjects, rai::String target) {
+	double initDist = 4;
 	// only set initDist for first decision
 	if (n->step == 0) {
 		n->cost(BD_symbolic) = numObjects * initDist;
@@ -150,10 +150,10 @@ void costToGo6(LGP_Node* n, int numObjects, rai::String source, rai::String targ
 	switch (str2int(decision->rule->key)) {
 		// we incentivize connect and connecting to the mobile base equally
 		// only place on target
-		case str2int("place"): n->cost(BD_symbolic) += placeHeuristic(n, decision, target); break;
+		case str2int("place"): n->cost(BD_symbolic) += placeHeuristic(n, decision, target, true); break;
 
 		// check if connected to mobile base -- if yes, then we skip this heuristic because we can move freely
-		case str2int("grasp"): n->cost(BD_symbolic) += graspHeuristic(n, decision); break;
+		case str2int("grasp"): n->cost(BD_symbolic) += graspHeuristic(n, decision, true); break;
 	};
 }
 

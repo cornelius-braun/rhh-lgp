@@ -36,11 +36,14 @@ bool testReach(rai::Frame *base, rai::Frame *target, double crawlerLen);
 /* this checks if a walker has an object within reach for grasping and placing */
 bool reachabilityCheck(LGP_Node *n, const FOL_World::Decision* decision, arr targetPos);
 
+/* this evaluates the reach of a panda robot */
+bool pandaReachability(LGP_Node *n, const FOL_World::Decision* decision, arr targetPos);
+
 /* this makes the robots walk to the target if not connected; once the placed something they are close enough to connect */
 double stepHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const char *target, int numberOfWalkers);
 
 /* only try to place on the target region, we place, else not */
-double placeHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const char *target);
+double placeHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const char *target, bool panda = false);
 
 /* prune disconnections when not on the tray or when last decision was to connect */
 double disconnectHeuristic(LGP_Node *n, const FOL_World::Decision* decision);
@@ -48,6 +51,6 @@ double disconnectHeuristic(LGP_Node *n, const FOL_World::Decision* decision);
 double connectHeuristic(LGP_Node *n, const FOL_World::Decision* decision);
 
 /* prune grasping of objects that are too far */
-double graspHeuristic(LGP_Node *n, const FOL_World::Decision* decision);
+double graspHeuristic(LGP_Node *n, const FOL_World::Decision* decision, bool panda = false);
 
 #endif //MANIPULATIONPLANNING_ACTIONHEURISTICS_H

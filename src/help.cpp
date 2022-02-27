@@ -68,7 +68,7 @@ void createShelfScene(rai::Configuration& C, uint numObj) {
 		C.addFile("scenarios/mobileManipulatorScene.g");
 		C.optimizeTree();
 		for(uint i=0; i<numObj; i++){
-			rai::Frame *f = C.addFrame(STRING("obj"<<i), "shelf1", "type:ssBox size:[.08, .08, .15, .02], contact:1, color:[1.,0.,0.], logical={ object:True, grippable }, joint=rigid" );
+			rai::Frame *f = C.addFrame(STRING("obj"<<i), "shelf1", "type:ssBox size:[.08, .08, .15, .02], contact:1, collisions:-1, color:[1.,0.,0.], logical={ object:True, grippable }, joint=rigid" );
 			f->setRelativePosition({(rnd.uni(-.5, .5)), rnd.uni(-.4,.4)+.1, .35});
 		}
 		C.stepSwift();
@@ -125,4 +125,24 @@ void createObstacleParcour(rai::Configuration& C, uint numObj) {
 	}
 	C.proxies.clear();
 	C.optimizeTree();
+}
+
+//===========================================================================
+// this is for random scenes with panda robots
+void createTableScene(rai::Configuration& C, uint numObj) {
+	for(;;){
+		C.clear();
+		C.addFile("scenarios/pandaStation.g");
+		C.optimizeTree();
+		for(uint i=0; i<numObj; i++){
+			rai::Frame *f = C.addFrame(STRING("obj"<<i), "table1", "type:ssBox size:[.08, .08, .15, .02], contact:1, collisions:-1, color:[1.,0.,0.], logical={ object:True, grippable }, joint=rigid" );
+			f->setRelativePosition({(rnd.uni(-.2, .2)), rnd.uni(-.2,.2), .1});
+		}
+		C.stepSwift();
+		arr g, J;
+		C.kinematicsPenetration(g, J);
+		if(g.scalar()==0.) break;
+		break;
+	}
+	C.proxies.clear();
 }
