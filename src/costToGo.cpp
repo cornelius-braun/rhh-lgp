@@ -152,6 +152,9 @@ void costToGo6(LGP_Node* n, int numObjects, rai::String target) {
 		// only place on target
 		case str2int("place"): n->cost(BD_symbolic) += placeHeuristic(n, decision, target, true); break;
 
+		// only place on target
+		case str2int("placeOnGoal"): n->cost(BD_symbolic) += placeHeuristic(n, decision, target, true); break;
+
 		// check if connected to mobile base -- if yes, then we skip this heuristic because we can move freely
 		case str2int("grasp"): n->cost(BD_symbolic) += graspHeuristic(n, decision, true); break;
 	};

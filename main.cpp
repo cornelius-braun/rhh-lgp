@@ -184,16 +184,16 @@ int main(int argc,char** argv){
   //solveClimbingTask(32, ACTION_HEURISTICS, 1, false, 1);
 
 	// complex scenario which contains rolling and climbing and disconnecting -- THIRD EXPERIMENT in paper uses this scenario with different configurations
-	//solveComplexTask(8, true, 2, false);
+	solveComplexTask(4, true, 2, false);
 
 	// this is the mobile manipulator scenario -- FOURTH EXPERIMENT in paper uses this scenario with different configurations
-	//solveMobileManipulator(8, true, 2, false);
+	//solveMobileManipulator(3, true, 2, false);
 
 	// FIFTH EXPERIMENT in paper uses this scenario with different configurations
 	//solveObstacleTask(2, true, 2, false);
 
 	// SIXTH EXPERIMENT in paper uses panda robots to transfer objects to goal
-	solvePandaTask(4, true, 2, false);
+	//solvePandaTask(2, true, 2, false);
 
 	// a receding horizon formulation that plans the first scenario from above iteratively with a horizon -- LAST EXPERIMENT
 	//RHHLGP(25, 10, MT_complex);

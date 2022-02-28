@@ -31,6 +31,7 @@ held
 equal
 placed
 touched
+onGoal
 
 ## KOMO symbols
 above
@@ -51,7 +52,7 @@ REWARD {
 #####################################################################
 DecisionRule place {
   X, Y, Z
-  { (gripper X) (grasped X Y) (tray Z) (held Y) (INFEASIBLE place X Y Z)! }
+  { (gripper X) (grasped X Y) (tray Z) (held Y) (onGoal Y)! (INFEASIBLE place X Y Z)! }
   { (grasped X Y)! (busy X)! (busy Y)! (held Y)! (placed Y) (on Z Y)  # logic only
     (stable Y ANY)!     # NLP predicates
     komo(touch X Y)! komo(touch Y Z) komo(above Y Z)
@@ -73,3 +74,14 @@ DecisionRule grasp {
     (stable A X) komo(touch A X) (touched A X)
   }
 }
+
+#####################################################################
+#DecisionRule placeOnGoal {
+#  X, Y, Z
+#  { (onGoal Y)! (gripper X) (grasped X Y) (tray Z) (target Z) (held Y) (INFEASIBLE placeOnGoal X Y Z)! }
+#  { (grasped X Y)! (busy X)! (busy Y)! (held Y)! (placed Y) (on Z Y)  (onGoal Y) # logic only
+#    (stable Y ANY)!     # NLP predicates
+#    komo(touch X Y)! komo(touch Y Z) komo(above Y Z)
+#    (stable Z Y) (stable X Y)! (topBoxPlace X Y Z)
+#    }
+#}

@@ -102,7 +102,7 @@ bool pandaReachability(LGP_Node *n, const FOL_World::Decision* decision, arr tar
 	if (decision->rule->key == "grasp") {
 		baseName.prepend(decision->substitution.elem(-2)->key.getLastN(1));
 	}
-	else if (decision->rule->key == "place") {
+	else if (STRING(decision->rule->key).contains("place")) {
 		baseName.prepend(decision->substitution.elem(-3)->key.getLastN(1));
 	}
 	arr position = n->startKinematics.getFrame(baseName)->getPosition();
@@ -125,13 +125,6 @@ double placeHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const ch
 	if ((panda && !(pandaReachability(n, decision, targetPos))) || (!panda && !reachabilityCheck(n, decision, targetPos))) {
 		return 1000;
 	}
-	// eliminate grasping the same object that was just placed
-	/*if (n->parent->decision && n->parent->parent) {
-		rai::String prevState = STRING(*n->parent->parent->folState);
-		if (prevState.contains(STRING("on "<<placeTo<<" "<<object))) {
-			return 1000;
-		}
-	}*/
 	return (decision->substitution.last()->key == target) ? -1 : 0;
 }
 
