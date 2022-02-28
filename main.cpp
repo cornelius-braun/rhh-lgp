@@ -119,6 +119,20 @@ void RHHLGP(int numObj, uint horizon, ManipulationTask task) {
 			RHHLGP_solver rhhlgp(C, horizon, heuristic, terminal, "fol/fol.g", 2);
 			rhhlgp.optimize(gl);
 		} break;
+
+		case MT_panda: {
+			rai::Configuration C;
+			// now setting up scene
+			createTableScene(C, numObj);
+			ptr<OpenGL> gl = setupCamera();
+
+			rai::String terminal;
+			for (int i = 0; i < numObj; ++i) {terminal << "(on goal obj" <<i << ") ";}
+
+			auto heuristic = [](LGP_Node *n){ return costToGo6(n, 5, "goal"); };
+			RHHLGP_solver rhhlgp(C, horizon, heuristic, terminal, "fol/panda_fol.g", 2);
+			rhhlgp.optimize(gl);
+		} break;
 	}
 }
 
@@ -173,10 +187,13 @@ int main(int argc,char** argv){
 	//solveComplexTask(8, true, 2, false);
 
 	// this is the mobile manipulator scenario -- FOURTH EXPERIMENT in paper uses this scenario with different configurations
-	//solveMobileManipulator(16, true, 2, false);
+	//solveMobileManipulator(8, true, 2, false);
 
 	// FIFTH EXPERIMENT in paper uses this scenario with different configurations
 	//solveObstacleTask(2, true, 2, false);
+
+	// SIXTH EXPERIMENT in paper uses panda robots to transfer objects to goal
+	solvePandaTask(4, true, 2, false);
 
 	// a receding horizon formulation that plans the first scenario from above iteratively with a horizon -- LAST EXPERIMENT
 	//RHHLGP(25, 10, MT_complex);
@@ -184,9 +201,7 @@ int main(int argc,char** argv){
 	//RHHLGP(45, 6, MT_climb_single);
 	//RHHLGP(32, 3, MT_climb);
 	//RHHLGP(4, 6, MT_obstacle);
-
-	//objectHandling();
-	solvePandaTask(2, true, 2, false);
+	//RHHLGP(4, 10, MT_panda); // TODO: find some configuration for which the non rhhlgp solver does not work
 
   return 0;
 }

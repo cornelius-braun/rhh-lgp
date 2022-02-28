@@ -66,7 +66,7 @@ DecisionRule place {
 DecisionRule grasp {
   A, X
   { (gripper A) (busy A)! (support A)!
-    (object X) (gripper X)! (grippable X) (held X)! #(touched A X)! #(placed X)! # oz: added 'base' frame as a logical 'base' in scene.g
+    (object X) (gripper X)! (grippable X) (held X)!
     (INFEASIBLE grasp A X)! }
   { (busy A)
     (held X) (grasped A X) (stable ANY X)! (on ANY X)!

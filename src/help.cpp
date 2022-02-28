@@ -130,13 +130,14 @@ void createObstacleParcour(rai::Configuration& C, uint numObj) {
 //===========================================================================
 // this is for random scenes with panda robots
 void createTableScene(rai::Configuration& C, uint numObj) {
+	rnd.seed(1);
 	for(;;){
 		C.clear();
 		C.addFile("scenarios/pandaStation.g");
 		C.optimizeTree();
 		for(uint i=0; i<numObj; i++){
-			rai::Frame *f = C.addFrame(STRING("obj"<<i), "table1", "type:ssBox size:[.08, .08, .15, .02], contact:1, collisions:-1, color:[1.,0.,0.], logical={ object:True, grippable }, joint=rigid" );
-			f->setRelativePosition({(rnd.uni(-.2, .2)), rnd.uni(-.2,.2), .1});
+			rai::Frame *f = C.addFrame(STRING("obj"<<i), "table1", "type:ssBox size:[.08, .08, .15, .02], contact:1, collisions:1, color:[1.,0.,0.], logical={ object:True, grippable }, joint=rigid" );
+			f->setRelativePosition({(rnd.uni(-.3, .1)), rnd.uni(-.2,.2), .1});
 		}
 		C.stepSwift();
 		arr g, J;

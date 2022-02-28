@@ -10,7 +10,8 @@ enum ManipulationTask {
 		MT_climb_single,
 		MT_complex,
 		MT_mobileManipulator,
-		MT_obstacle
+		MT_obstacle,
+		MT_panda
 };
 
 enum HeuristicFct {
