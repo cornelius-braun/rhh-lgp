@@ -10,7 +10,8 @@ enum ManipulationTask {
 		MT_climb_single,
 		MT_complex,
 		MT_mobileManipulator,
-		MT_obstacle
+		MT_obstacle,
+		MT_panda
 };
 
 enum HeuristicFct {
@@ -28,6 +29,8 @@ void createRandomScene(rai::Configuration& C, uint numObj=4, double zDiff=.9, do
 void createShelfScene(rai::Configuration& C, uint numObj=4);
 
 void createObstacleParcour(rai::Configuration& C, uint numObj);
+
+void createTableScene(rai::Configuration& C, uint numObj);
 
 /* converts a string to an int to use strings in switches */
 constexpr unsigned int str2int(const char* str, int h = 0) { return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];}

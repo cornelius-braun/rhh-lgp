@@ -4,6 +4,7 @@
 double CRAWLER_LEN = 1.5;
 double TEST_OBJECT_LEN = .2;
 double MOBILE_BASE_LEN = .3;
+double PANDA_LEN = .7;
 
 ////===========================================================================
 arr getSupportPosition(LGP_Node* n, const char *effector) {
@@ -13,6 +14,17 @@ arr getSupportPosition(LGP_Node* n, const char *effector) {
 	std::smatch m;
 	regex_search(state, m, r);
 	if (STRING(m[2])) position = n->startKinematics.getFrame(STRING(m[2]))->getPosition();
+	return position;
+}
+
+////===========================================================================
+arr findObject(LGP_Node* n, const char *effector) {
+	arr position;
+	std::string state = STRING(*n->parent->folState).p;
+	const std::regex r("(on )(\\w+)( " + STRING(effector) + ")");
+	std::smatch m;
+	regex_search(state, m, r);
+	position = n->startKinematics.getFrame(STRING(m[2]))->getPosition();
 	return position;
 }
 
@@ -85,6 +97,19 @@ bool reachabilityCheck(LGP_Node *n, const FOL_World::Decision* decision, arr tar
 }
 
 //===========================================================================
+bool pandaReachability(LGP_Node *n, const FOL_World::Decision* decision, arr targetPos) {
+	rai::String baseName = "_panda_link0";
+	if (decision->rule->key == "grasp") {
+		baseName.prepend(decision->substitution.elem(-2)->key.getLastN(1));
+	}
+	else if (STRING(decision->rule->key).contains("place")) {
+		baseName.prepend(decision->substitution.elem(-3)->key.getLastN(1));
+	}
+	arr position = n->startKinematics.getFrame(baseName)->getPosition();
+	return euclideanDistance(position, targetPos) <= PANDA_LEN;
+}
+
+//===========================================================================
 double stepHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const char *target, int numberOfWalkers) {
 	arr targetPos = n->startKinematics.getFrame(decision->substitution.last()->key)->getPosition();
 	return euclideanDistance(getPosFromDecision(n, decision), targetPos) <= numberOfWalkers*CRAWLER_LEN ? getStepSize(n, decision, target) : 1000;
@@ -92,9 +117,14 @@ double stepHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const cha
 
 
 //===========================================================================
-double placeHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const char *target) {
-	arr targetPos = n->startKinematics.getFrame(decision->substitution.last()->key)->getPosition();
-	if (!reachabilityCheck(n, decision, targetPos)) return 1000;
+double placeHeuristic(LGP_Node *n, const FOL_World::Decision* decision, const char *target, bool panda) {
+	// prune actions that are unreachable
+	rai::String placeTo = decision->substitution.last()->key;
+	rai::String object = decision->substitution.elem(-2)->key;
+	arr targetPos = n->startKinematics.getFrame(placeTo)->getPosition();
+	if ((panda && !(pandaReachability(n, decision, targetPos))) || (!panda && !reachabilityCheck(n, decision, targetPos))) {
+		return 1000;
+	}
 	return (decision->substitution.last()->key == target) ? -1 : 0;
 }
 
@@ -122,7 +152,12 @@ double connectHeuristic(LGP_Node *n, const FOL_World::Decision* decision) {
 }
 
 //===========================================================================
-double graspHeuristic(LGP_Node *n, const FOL_World::Decision* decision) {
-	arr targetPos = n->startKinematics.getFrame(decision->substitution.last()->key)->getPosition();
-	return reachabilityCheck(n, decision, targetPos) ? 0 : 1000;
+double graspHeuristic(LGP_Node *n, const FOL_World::Decision* decision, bool panda) {
+	rai::String object = decision->substitution.last()->key;
+	if ((panda && !pandaReachability(n, decision, findObject(n, object)))
+	|| (!panda && !reachabilityCheck(n, decision, n->startKinematics.getFrame(object)->getPosition()))) return 1000;
+
+	// this checks that we dont lift anything away from the goal
+	if (n->parent && STRING(*n->parent->folState).contains(STRING("on goal "<<object))) return 1000;
+	return 0;
 }

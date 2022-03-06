@@ -3,6 +3,7 @@
 #include "src/help.h"
 #include <LGP/LGP_tree.h>
 #include <Kin/kin.h>
+//#include "src/objectHandling.h"
 
 //===========================================================================
 void solveClimbingTask(uint numObj, HeuristicFct h, int verbose=1, bool player=false, int numCrawlers=2){
@@ -118,6 +119,20 @@ void RHHLGP(int numObj, uint horizon, ManipulationTask task) {
 			RHHLGP_solver rhhlgp(C, horizon, heuristic, terminal, "fol/fol.g", 2);
 			rhhlgp.optimize(gl);
 		} break;
+
+		case MT_panda: {
+			rai::Configuration C;
+			// now setting up scene
+			createTableScene(C, numObj);
+			ptr<OpenGL> gl = setupCamera();
+
+			rai::String terminal;
+			for (int i = 0; i < numObj; ++i) {terminal << "(on goal obj" <<i << ") ";}
+
+			auto heuristic = [](LGP_Node *n){ return costToGo6(n, 5, "goal"); };
+			RHHLGP_solver rhhlgp(C, horizon, heuristic, terminal, "fol/panda_fol.g", 2);
+			rhhlgp.optimize(gl);
+		} break;
 	}
 }
 
@@ -133,6 +148,23 @@ void solveObstacleTask(uint numObj, bool h = true, int verbose = 1, bool player 
 	LGP_Tree lgp(C, "fol/fol.g");
 	lgp.fol.addTerminalRule(terminal);
 	lgp.heuristicCosts = [](LGP_Node *n){ costToGo5(n, "base0", "banana"); };
+	lgp.verbose = verbose;
+	if (player) { lgp.player(); } else { lgp.run(); }
+}
+
+//===========================================================================
+void solvePandaTask(uint numObj, bool h = true, int verbose = 1, bool player = false) {
+	// set up scene
+	rai::Configuration C;
+	createTableScene(C, numObj);
+	ptr<OpenGL> gl = setupCamera();
+
+	rai::String terminal;
+	for (uint i = 0; i < numObj; ++i) {terminal << "(on goal obj" <<i << ") ";}
+
+	LGP_Tree lgp(C, "fol/panda_fol.g");
+	lgp.fol.addTerminalRule(terminal);
+	lgp.heuristicCosts = [](LGP_Node *n){ costToGo6(n, 3, "goal"); };
 	lgp.verbose = verbose;
 	if (player) { lgp.player(); } else { lgp.run(); }
 }
@@ -155,17 +187,21 @@ int main(int argc,char** argv){
 	//solveComplexTask(4, true, 2, false);
 
 	// this is the mobile manipulator scenario -- FOURTH EXPERIMENT in paper uses this scenario with different configurations
-	//solveMobileManipulator(8, true, 2, false);
+	//solveMobileManipulator(3, true, 2, false);
 
 	// FIFTH EXPERIMENT in paper uses this scenario with different configurations
 	//solveObstacleTask(2, true, 2, false);
 
+	// SIXTH EXPERIMENT in paper uses panda robots to transfer objects to goal
+	solvePandaTask(4, true, 2, false);
+
 	// a receding horizon formulation that plans the first scenario from above iteratively with a horizon -- LAST EXPERIMENT
 	//RHHLGP(25, 10, MT_complex);
-	//RHHLGP(8, 6, MT_mobileManipulator);
+	//RHHLGP(16, 4, MT_mobileManipulator);
 	//RHHLGP(45, 6, MT_climb_single);
 	//RHHLGP(32, 3, MT_climb);
 	//RHHLGP(4, 6, MT_obstacle);
+	//RHHLGP(2, 10, MT_panda);
 
   return 0;
 }
