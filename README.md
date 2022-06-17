@@ -1,6 +1,6 @@
 # RHH-LGP
 
-This repository contains the implementation of the RHH-LGP algorithm for task and motion planning (TAMP) that is presented in the research paper 
+This repository contains the implementation of the RHH-LGP algorithm for task and motion planning (TAMP) that is presented in the [research paper](https://arxiv.org/abs/2110.03420) 
 
 **RHH-LGP: Receding Horizon And Heuristics-Based Logic-Geometric Programming For Task And Motion Planning** 
 
